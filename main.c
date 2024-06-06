@@ -4,6 +4,8 @@
 #include "menu.c"
 #include "serve.c"
 #include "stock.c"
+#include "fruitstock.c"
+#include "toppingsstock.c"
 
 
 int main() 

@@ -2,9 +2,13 @@
 
 void displayMenu();
 void serveCustomer();
-void checkStock();
+void checkFlavourStock();
+void checkFruitStock();
+void checkToppingsStock();
 
-int strawberrystock=100,blueberrystock=100,vanillastock=100,chocolatestock=100;
+int strawberrystock = 100, blueberrystock = 100, vanillastock = 100, chocolatestock = 100;
+double applestock = 2000.00, Blueberrystock = 2000.00, Strawberrystock = 2000.00, Mangostock = 2000.00;
+double chocolatesaucestock = 3000.00, sprinklesstock = 3000.00, caramelsaucestock = 3000.00, whippedcreamstock = 3000.00;
 
 int main() 
 {
@@ -16,8 +20,10 @@ int main()
         printf("\nOptions:\n");
         printf("1. Display Menu\n");
         printf("2. Serve Customer\n");
-        printf("3. Check Stock\n");
-        printf("4. Exit\n");
+        printf("3. Check Flavour Stock\n");
+        printf("4. Check Fruit Stock\n");
+        printf("5. Check Toppings Stock\n");
+        printf("6. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -30,9 +36,15 @@ int main()
                 serveCustomer();
                 break;
             case 3:
-                checkStock();
+                checkFlavourStock();
                 break;
             case 4:
+                checkFruitStock();
+                break;
+            case 5:
+                checkToppingsStock();
+                break;
+            case 6:
                 printf("Exiting...\n");
                 return 0;
             default:
@@ -66,97 +78,124 @@ void serveCustomer()
     scanf("%d", &choice);
 
     switch (choice) 
-{
+    {
         case 1:
-            cost = 200.00;// cost of Strawberry flavor
-            strawberrystock-=1;
+            cost = 200.00; // cost of Strawberry flavor
+            strawberrystock -= 1;
             break;
         case 2:
             cost = 180.00; // cost of Blueberry flavor
-             blueberrystock-=1;
+            blueberrystock -= 1;
             break;
         case 3:
-            cost = 170.00;
-             vanillastock-=1;// cost of Vanilla flavor
+            cost = 170.00; // cost of Vanilla flavor
+            vanillastock -= 1;
             break;
         case 4:
             cost = 220.00; // cost of Chocolate flavor
-             chocolatestock-=1;
+            chocolatestock -= 1;
             break;
         default:
-            printf("Invalid choice.Please select a valid option.\n");
+            printf("Invalid choice. Please select a valid option.\n");
             return;
     }
 
     printf("Select a fruit:\n");
-    printf("1.Apple\n");
-    printf("2.Blueberry\n");
-    printf("3.Strawberry\n");
-    printf("4.Mango\n");
+    printf("1. Apple\n");
+    printf("2. Blueberry\n");
+    printf("3. Strawberry\n");
+    printf("4. Mango\n");
     printf("Enter your choice: ");
-    scanf("%d",&fruitchoice);
+    scanf("%d", &fruitchoice);
+
+    printf("Enter the quantity of fruit in grams: ");
+    scanf("%f", &fgrams);
 
     switch (fruitchoice)
- {
+    {
         case 1:
             cost_per_gram = 3.00; // price of Apple per gram
+            applestock -= fgrams;
             break;
         case 2:
             cost_per_gram = 5.00; // price of Blueberry per gram
+            Blueberrystock -= fgrams;
             break;
         case 3:
             cost_per_gram = 4.00; // price of Strawberry per gram
+            Strawberrystock -= fgrams;
             break;
         case 4:
             cost_per_gram = 7.00; // price of Mango per gram
+            Mangostock -= fgrams;
             break;
         default:
             printf("Invalid choice. Please select a valid option.\n");
             return;
     }
 
-    printf("Enter the quantity of fruit in grams: ");
-    scanf("%f",&fgrams);
-
     printf("Select a topping:\n");
-    printf("1.Chocolate Sauce\n");
-    printf("2.Sprinkles\n");
-    printf("3.Caramel Sauce\n");
-    printf("4.Whipped Cream\n");
+    printf("1. Chocolate Sauce\n");
+    printf("2. Sprinkles\n");
+    printf("3. Caramel Sauce\n");
+    printf("4. Whipped Cream\n");
     printf("Enter your choice: ");
     scanf("%d", &toppingchoice);
 
-    switch (toppingchoice) {
+    printf("Enter the quantity of topping in grams: ");
+    scanf("%f", &tgrams);
+
+    switch (toppingchoice) 
+    {
         case 1:
             cost_per_grams = 10.00;
+            chocolatesaucestock -= tgrams;
             break;
         case 2:
             cost_per_grams = 15.00;
+            sprinklesstock -= tgrams;
             break;
         case 3:
             cost_per_grams = 20.00;
+            caramelsaucestock -= tgrams;
             break;
         case 4:
             cost_per_grams = 15.00;
+            whippedcreamstock -= tgrams;
             break;
         default:
             printf("Invalid choice. Please select a valid option.\n");
             return;
     }
-
-    printf("Enter the quantity of topping in grams: ");
-    scanf("%f", &tgrams);
 
     totalcost = cost + (cost_per_gram * fgrams) + (cost_per_grams * tgrams);
     printf("Total cost is: Rs %.2f\n", totalcost);
     printf("Thank you for choosing Frozoland!!\n");
 }
 
-void checkStock()
+void checkFlavourStock()
 {
-    printf("Current Stock:\n");
+    printf("Current Flavour Stock:\n");
     printf("1. Strawberry: %d\n", strawberrystock);
     printf("2. Blueberry: %d\n", blueberrystock);
     printf("3. Vanilla: %d\n", vanillastock);
     printf("4. Chocolate: %d\n", chocolatestock);
+}
+
+void checkFruitStock()
+{
+    printf("Current Fruit Stock:\n");
+    printf("1. Apple: %.2f grams\n", applestock);
+    printf("2. Blueberry: %.2f grams\n", Blueberrystock);
+    printf("3. Strawberry: %.2f grams\n", Strawberrystock);
+    printf("4. Mango: %.2f grams\n", Mangostock);
+}
+
+void checkToppingsStock()
+{
+    printf("Current Toppings Stock:\n");
+    printf("1. Chocolate Sauce: %.2f grams\n", chocolatesaucestock);
+    printf("2. Sprinkles: %.2f grams\n", sprinklesstock);
+    printf("3. Caramel Sauce: %.2f grams\n", caramelsaucestock);
+    printf("4. Whipped Cream: %.2f grams\n", whippedcreamstock);
 }
