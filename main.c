@@ -18,8 +18,10 @@ int main()
         printf("\nOptions:\n");
         printf("1. Display Menu\n");
         printf("2. Serve Customer\n");
-        printf("3. Check Stock\n");
-        printf("4. Exit\n");
+        printf("3. Check Flavour Stock\n");
+        printf("4. Check Fruit Stock\n");
+        printf("5. Check Toppings Stock\n");
+        printf("6. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -32,9 +34,15 @@ int main()
                 serveCustomer();
                 break;
             case 3:
-                checkStock();
+                checkFlavourStock();
                 break;
             case 4:
+                checkFruitStock();
+                break;
+            case 5:
+                checkToppingsStock();
+                break;
+            case 6:
                 printf("Exiting...\n");
                 return 0;
             default:

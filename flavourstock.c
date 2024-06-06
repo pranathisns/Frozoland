@@ -3,9 +3,9 @@
 
 #include "frozo.h"
 
-void checkStock()
+void checkFlavourStock()
 {
-    printf("Current Stock:\n");
+    printf("Current Flavour Stock:\n");
     printf("1. Strawberry: %d\n", strawberrystock);
     printf("2. Blueberry: %d\n", blueberrystock);
     printf("3. Vanilla: %d\n", vanillastock);
