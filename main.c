@@ -3,7 +3,7 @@
 #include "frozo.h"
 #include "menu.c"
 #include "serve.c"
-#include "stock.c"
+#include "flavourstock.c"
 #include "fruitstock.c"
 #include "toppingsstock.c"
 
