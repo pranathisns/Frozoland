@@ -8,9 +8,9 @@
 #include "toppingsstock.c"
 #include "clearInputBuffer.c"
 #include "isAlphaString.c"
-#include "isDigitString"
-#include "readStockFromFile"
-#include "writeOrderToFile"
+#include "isDigitString.c"
+#include "readStockFromFile.c"
+#include "writeOrderToFile.c"
 
 
 int main() 
