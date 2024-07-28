@@ -1,6 +1,8 @@
 
 
 #include "frozo.h"
+
+
 void checkToppingsStock()
 {
     printf("Current Toppings Stock:\n");

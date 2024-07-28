@@ -6,15 +6,28 @@
 #include "flavourstock.c"
 #include "fruitstock.c"
 #include "toppingsstock.c"
+#include "clearInputBuffer.c"
+#include "isAlphaString.c"
+#include "isDigitString"
+#include "readStockFromFile"
+#include "writeOrderToFile"
 
 
 int main() 
 {
     printf("Welcome to FrozoLand!!!!\n");
 
+    // Read stock information from file
+    readStockFromFile();
+
     while (1) 
     {
         int choice;
+        FILE *stockFile;
+        FILE *orderFile;
+        char name[50];
+        char phone[15];
+
         printf("\nOptions:\n");
         printf("1. Display Menu\n");
         printf("2. Serve Customer\n");
@@ -23,7 +36,14 @@ int main()
         printf("5. Check Toppings Stock\n");
         printf("6. Exit\n");
         printf("Enter your choice: ");
-        scanf("%d", &choice);
+        
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input! Please enter a valid number.\n");
+            clearInputBuffer();
+            continue;
+        }
+        
+        clearInputBuffer();  // Clear the buffer after reading the integer
 
         switch (choice) 
         {
@@ -43,6 +63,16 @@ int main()
                 checkToppingsStock();
                 break;
             case 6:
+                // Write updated stock information to file
+                stockFile = fopen("stock.txt", "w");
+                if (stockFile != NULL) {
+                    fprintf(stockFile, "%d %d %d %d\n", strawberrystock, blueberrystock, vanillastock, chocolatestock);
+                    fprintf(stockFile, "%.2f %.2f %.2f %.2f\n", applestock, Blueberrystock, Strawberrystock, Mangostock);
+                    fprintf(stockFile, "%.2f %.2f %.2f %.2f\n", chocolatesaucestock, sprinklesstock, caramelsaucestock, whippedcreamstock);
+                    fclose(stockFile);
+                } else {
+                    printf("Error: Could not open stock file for writing.\n");
+                }
                 printf("Exiting...\n");
                 return 0;
             default:

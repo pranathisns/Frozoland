@@ -1,10 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdbool.h>
 
 void displayMenu();
 void serveCustomer();
 void checkFlavourStock();
 void checkFruitStock();
 void checkToppingsStock();
+void clearInputBuffer();  // Function to clear the input buffer
+bool isAlphaString(const char* str);
+bool isDigitString(const char* str, size_t length);
+void readStockFromFile();
+void writeOrderToFile(const char* name, const char* phone, float totalcost);
 
 int strawberrystock = 100, blueberrystock = 100, vanillastock = 100, chocolatestock = 100;
 double applestock = 2000.00, Blueberrystock = 2000.00, Strawberrystock = 2000.00, Mangostock = 2000.00;
@@ -14,9 +23,17 @@ int main()
 {
     printf("Welcome to FrozoLand!!!!\n");
 
+    // Read stock information from file
+    readStockFromFile();
+
     while (1) 
     {
         int choice;
+        FILE *stockFile;
+        FILE *orderFile;
+        char name[50];
+        char phone[15];
+
         printf("\nOptions:\n");
         printf("1. Display Menu\n");
         printf("2. Serve Customer\n");
@@ -25,7 +42,14 @@ int main()
         printf("5. Check Toppings Stock\n");
         printf("6. Exit\n");
         printf("Enter your choice: ");
-        scanf("%d", &choice);
+        
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input! Please enter a valid number.\n");
+            clearInputBuffer();
+            continue;
+        }
+        
+        clearInputBuffer();  // Clear the buffer after reading the integer
 
         switch (choice) 
         {
@@ -45,6 +69,16 @@ int main()
                 checkToppingsStock();
                 break;
             case 6:
+                // Write updated stock information to file
+                stockFile = fopen("stock.txt", "w");
+                if (stockFile != NULL) {
+                    fprintf(stockFile, "%d %d %d %d\n", strawberrystock, blueberrystock, vanillastock, chocolatestock);
+                    fprintf(stockFile, "%.2f %.2f %.2f %.2f\n", applestock, Blueberrystock, Strawberrystock, Mangostock);
+                    fprintf(stockFile, "%.2f %.2f %.2f %.2f\n", chocolatesaucestock, sprinklesstock, caramelsaucestock, whippedcreamstock);
+                    fclose(stockFile);
+                } else {
+                    printf("Error: Could not open stock file for writing.\n");
+                }
                 printf("Exiting...\n");
                 return 0;
             default:
@@ -67,15 +101,42 @@ void serveCustomer()
 {
     int choice, fruitchoice, toppingchoice;
     float cost = 0.0, fgrams = 0.0, cost_per_gram = 0.0, totalcost = 0.0, tgrams = 0.0, cost_per_grams = 0.0;
+    char name[50];
+    char phone[15];
+
+    // Ask for customer details
+    printf("Enter your name: ");
+    if (scanf("%49s", name) != 1 || !isAlphaString(name)) {
+        printf("Error: Name should only contain letters.\n");
+        clearInputBuffer();
+        return;
+    }
     
+    clearInputBuffer();  // Clear the buffer after reading the string
+
+    printf("Enter your phone number (10 digits): ");
+    if (scanf("%14s", phone) != 1 || !isDigitString(phone, 10)) {
+        printf("Error: Phone number should contain exactly 10 digits.\n");
+        clearInputBuffer();
+        return;
+    }
+    
+    clearInputBuffer();  // Clear the buffer after reading the string
+
     printf("Select yogurt flavour:\n");
     printf("1. Strawberry\n");
     printf("2. Blueberry\n");
     printf("3. Vanilla\n");
     printf("4. Chocolate\n");
-    printf("5. Exit\n");
     printf("Enter your choice: ");
-    scanf("%d", &choice);
+    
+    if (scanf("%d", &choice) != 1) {
+        printf("Invalid input! Please enter a valid number.\n");
+        clearInputBuffer();
+        return;
+    }
+    
+    clearInputBuffer();  // Clear the buffer after reading the integer
 
     switch (choice) 
     {
@@ -106,10 +167,22 @@ void serveCustomer()
     printf("3. Strawberry\n");
     printf("4. Mango\n");
     printf("Enter your choice: ");
-    scanf("%d", &fruitchoice);
+    
+    if (scanf("%d", &fruitchoice) != 1 || fruitchoice < 1 || fruitchoice > 4) {
+        printf("Invalid choice! Please enter a number between 1 and 4.\n");
+        clearInputBuffer();
+        return;
+    }
 
     printf("Enter the quantity of fruit in grams: ");
-    scanf("%f", &fgrams);
+    
+    if (scanf("%f", &fgrams) != 1 || fgrams <= 0) {
+        printf("Invalid quantity! Please enter a valid number of grams.\n");
+        clearInputBuffer();
+        return;
+    }
+    
+    clearInputBuffer();  // Clear the buffer after reading the float
 
     switch (fruitchoice)
     {
@@ -140,10 +213,22 @@ void serveCustomer()
     printf("3. Caramel Sauce\n");
     printf("4. Whipped Cream\n");
     printf("Enter your choice: ");
-    scanf("%d", &toppingchoice);
+    
+    if (scanf("%d", &toppingchoice) != 1 || toppingchoice < 1 || toppingchoice > 4) {
+        printf("Invalid choice! Please enter a number between 1 and 4.\n");
+        clearInputBuffer();
+        return;
+    }
 
     printf("Enter the quantity of topping in grams: ");
-    scanf("%f", &tgrams);
+    
+    if (scanf("%f", &tgrams) != 1 || tgrams <= 0) {
+        printf("Invalid quantity! Please enter a valid number of grams.\n");
+        clearInputBuffer();
+        return;
+    }
+
+    clearInputBuffer();  // Clear the buffer after reading the float
 
     switch (toppingchoice) 
     {
@@ -171,6 +256,9 @@ void serveCustomer()
     totalcost = cost + (cost_per_gram * fgrams) + (cost_per_grams * tgrams);
     printf("Total cost is: Rs %.2f\n", totalcost);
     printf("Thank you for choosing Frozoland!!\n");
+
+    // Write the order details to a file
+    writeOrderToFile(name, phone, totalcost);
 }
 
 void checkFlavourStock()
@@ -198,4 +286,63 @@ void checkToppingsStock()
     printf("2. Sprinkles: %.2f grams\n", sprinklesstock);
     printf("3. Caramel Sauce: %.2f grams\n", caramelsaucestock);
     printf("4. Whipped Cream: %.2f grams\n", whippedcreamstock);
+}
+
+void clearInputBuffer() 
+{
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) 
+    {
+        // Discard characters until end of line or EOF
+    }
+}
+
+bool isAlphaString(const char* str)
+{
+    while (*str)
+    {
+        if (!isalpha((unsigned char)*str))
+            return false;
+        str++;
+    }
+    return true;
+}
+
+bool isDigitString(const char* str, size_t length)
+{
+    size_t len = strlen(str);
+    if (len != length) return false;
+    while (*str)
+    {
+        if (!isdigit((unsigned char)*str))
+            return false;
+        str++;
+    }
+    return true;
+}
+
+void readStockFromFile()
+{
+    FILE *stockFile = fopen("stock.txt", "r");
+    if (stockFile != NULL) {
+        fscanf(stockFile, "%d %d %d %d\n", &strawberrystock, &blueberrystock, &vanillastock, &chocolatestock);
+        fscanf(stockFile, "%lf %lf %lf %lf\n", &applestock, &Blueberrystock, &Strawberrystock, &Mangostock);
+        fscanf(stockFile, "%lf %lf %lf %lf\n", &chocolatesaucestock, &sprinklesstock, &caramelsaucestock, &whippedcreamstock);
+        fclose(stockFile);
+    } else {
+        printf("Error: Could not open stock file for reading.\n");
+    }
+}
+
+void writeOrderToFile(const char* name, const char* phone, float totalcost)
+{
+    FILE *orderFile = fopen("orders.txt", "a");
+    if (orderFile != NULL) {
+        fprintf(orderFile, "Customer Name: %s\n", name);
+        fprintf(orderFile, "Phone Number: %s\n", phone);
+        fprintf(orderFile, "Total Cost: Rs %.2f\n\n", totalcost);
+        fclose(orderFile);
+    } else {
+        printf("Error: Could not open orders file for writing.\n");
+    }
 }
